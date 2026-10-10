@@ -15,9 +15,11 @@
 @endforeach
 @if($section === 'branding')
 <p class="hint">{{ __('Ein hochgeladenes Logo ersetzt die Wortmarke samt Projektname im Header. Wenn nur eine Variante vorhanden ist, wird sie in beiden Farbmodi verwendet. Das bisherige Logo bleibt als Light-Mode-Variante erhalten, bis es ersetzt oder entfernt wird.') }}</p>
-@foreach(['logo_light'=>'Logo für Light-Mode', 'logo_dark'=>'Logo für Dark-Mode', 'social_image'=>'Open-Graph-Bild', 'icon'=>'Fav-/App-Icon'] as $kind => $label)
-<label for="{{ $kind }}">{{ __($label) }}</label><p class="hint">{{ $kind==='social_image' ? __('Wird auf 1200 × 630 Pixel zugeschnitten.') : ($kind==='icon' ? __('Quadratische Vorlage empfohlen. Favicon und App-Icons werden automatisch erzeugt.') : __('PNG mit transparentem Hintergrund empfohlen.')) }} {{ __('PNG, JPEG oder WebP; maximal 8 MB und 20 Megapixel.') }}</p>
-@php($assetPreview = config('branding.'.($kind==='icon' ? 'icon_192' : $kind)) ?: ($kind === 'logo_light' ? config('branding.logo') : null))
+<p class="hint">{{ __('Open-Graph-Bilder werden passend zur Seitensprache verwendet. Solange eine Sprachversion fehlt, wird das bisherige gemeinsame Bild oder das Standardbild der Sprache verwendet.') }}</p>
+@if(config('branding.social_image'))<label><input type="checkbox" name="clear_social_image" value="1">{{ __('Bisheriges gemeinsames Open-Graph-Bild entfernen') }}</label>@endif
+@foreach(['logo_light'=>'Logo für Light-Mode', 'logo_dark'=>'Logo für Dark-Mode', 'social_image_de'=>'Open-Graph-Bild Deutsch', 'social_image_en'=>'Open-Graph-Bild Englisch', 'icon'=>'Fav-/App-Icon'] as $kind => $label)
+<label for="{{ $kind }}">{{ __($label) }}</label><p class="hint">{{ in_array($kind, ['social_image_de','social_image_en'], true) ? __('Wird auf 1200 × 630 Pixel zugeschnitten.') : ($kind==='icon' ? __('Quadratische Vorlage empfohlen. Favicon und App-Icons werden automatisch erzeugt.') : __('PNG mit transparentem Hintergrund empfohlen.')) }} {{ __('PNG, JPEG oder WebP; maximal 8 MB und 20 Megapixel.') }}</p>
+@php($assetPreview = config('branding.'.($kind==='icon' ? 'icon_192' : $kind)) ?: ($kind === 'logo_light' ? config('branding.logo') : (in_array($kind, ['social_image_de','social_image_en'], true) ? config('branding.social_image') : null)))
 @if($assetPreview)<img class="asset-preview" src="{{ url($assetPreview) }}" alt="{{ __($label) }}">@endif
 <input id="{{ $kind }}" type="file" name="{{ $kind }}" accept="image/png,image/jpeg,image/webp"><label><input type="checkbox" name="clear_{{ $kind }}" value="1">{{ __('Eigenes Bild entfernen und Standard verwenden') }}</label>
 @endforeach

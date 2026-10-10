@@ -175,6 +175,37 @@ class AdminBackendTest extends TestCase
         $this->get('/media/branding/not-an-image.txt')->assertNotFound();
     }
 
+    public function test_localized_social_images_are_cropped_and_selected_by_page_language(): void
+    {
+        Storage::fake('public');
+        $this->admin();
+        $settings = app(InstanceSettings::class);
+        $settings->put('asset_social_image', '/images/shared-image.png');
+        $settings->apply();
+        $this->post('/admin/settings/branding', [
+            'social_image_de' => UploadedFile::fake()->image('german.png', 800, 800),
+            'social_image_en' => UploadedFile::fake()->image('english.png', 1500, 700),
+        ])->assertSessionHasNoErrors();
+        $settings->apply();
+        foreach (['de', 'en'] as $locale) {
+            $image = config('branding.social_image_'.$locale);
+            $dimensions = getimagesizefromstring(Storage::disk('public')->get('branding/'.basename($image)));
+            $this->assertSame([1200, 630], [$dimensions[0], $dimensions[1]]);
+            $html = $this->get('/'.$locale.'/')->assertOk()->getContent();
+            $this->assertStringContainsString('property="og:image" content="'.url($image).'"', $html);
+            $this->assertStringContainsString('name="twitter:image" content="'.url($image).'"', $html);
+            $this->get($image)->assertOk();
+        }
+        $this->post('/admin/settings/branding', ['clear_social_image_en' => 1])->assertSessionHasNoErrors();
+        $settings->apply();
+        $this->get('/en/')->assertSee('property="og:image" content="'.url('/images/shared-image.png').'"', false);
+        $this->post('/admin/settings/branding', ['clear_social_image' => 1])->assertSessionHasNoErrors();
+        $settings->apply();
+        $this->get('/en/')->assertSee('social-preview-en.png');
+        $this->get('/de/')->assertSee(config('branding.social_image_de'), false);
+        $this->post('/admin/settings/branding', ['social_image_en' => UploadedFile::fake()->createWithContent('bad.svg', '<svg/>')])->assertSessionHasErrors('social_image_en');
+    }
+
     public function test_failed_asset_writes_do_not_save_broken_branding_settings(): void
     {
         $this->admin();

@@ -9,7 +9,8 @@
     $socialTitle = __(':name – Link-Vorschauen prüfen', ['name' => config('app.name')]);
     $socialDescription = config('site.description_'.app()->getLocale()) ?: __('Prüfe Social-Metadaten, Bilder und Schema.org-Produktdaten. Mit neun Vorschau-Ansichten und Best-Practice-Hinweisen – lokal und online.');
     $socialUrl = \App\Support\LocalizedUrl::to();
-    $socialImage = config('branding.social_image') ? url(config('branding.social_image')) : rtrim(config('app.url'), '/').'/images/'.(app()->getLocale() === 'en' ? 'social-preview-en.png' : 'social-preview-v3.png');
+    $localizedSocialImage = config('branding.social_image_'.app()->getLocale()) ?: config('branding.social_image');
+    $socialImage = $localizedSocialImage ? url($localizedSocialImage) : rtrim(config('app.url'), '/').'/images/'.(app()->getLocale() === 'en' ? 'social-preview-en.png' : 'social-preview-v3.png');
     $socialAlt = __('Open Graph Studio: Link-Vorschauen für Open Graph, Discord, Twitter/X, LinkedIn, Telegram, Bluesky, Mastodon und Slack prüfen.');
 @endphp
 <title>{{ $socialTitle }}</title>

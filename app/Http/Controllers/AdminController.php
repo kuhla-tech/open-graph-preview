@@ -40,7 +40,7 @@ class AdminController extends Controller
             }
         }
         if ($section === 'branding') {
-            foreach (['logo', 'logo_light', 'logo_dark', 'social_image', 'icon'] as $kind) {
+            foreach (['logo', 'logo_light', 'logo_dark', 'social_image', 'social_image_de', 'social_image_en', 'icon'] as $kind) {
                 $rules[$kind] = ['nullable', 'file', 'image', 'mimes:png,jpg,jpeg,webp', 'max:8192'];
             }
         }
@@ -55,7 +55,7 @@ class AdminController extends Controller
             }
         }
         $uploads = [];
-        foreach (['logo', 'logo_light', 'logo_dark', 'social_image', 'icon'] as $kind) {
+        foreach (['logo', 'logo_light', 'logo_dark', 'social_image', 'social_image_de', 'social_image_en', 'icon'] as $kind) {
             if ($request->hasFile($kind) && $section === 'branding') {
                 $uploads += $assets->store($request->file($kind), $kind);
             }
@@ -72,7 +72,7 @@ class AdminController extends Controller
                 $settings->put($key, $field['type'] === 'secret' && $request->boolean('clear_'.$key) ? null : $value);
             }
             if ($section === 'branding') {
-                foreach (['logo', 'logo_light', 'logo_dark', 'social_image', 'icon'] as $kind) {
+                foreach (['logo', 'logo_light', 'logo_dark', 'social_image', 'social_image_de', 'social_image_en', 'icon'] as $kind) {
                     if ($request->boolean('clear_'.$kind) && ! $request->hasFile($kind)) {
                         foreach ($kind === 'icon' ? ['icon_32', 'icon_180', 'icon_192', 'icon_512', 'favicon'] : [$kind] as $asset) {
                             $settings->put('asset_'.$asset, null);
