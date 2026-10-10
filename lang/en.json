@@ -433,5 +433,12 @@
   "Sitzungsdauer (Minuten)": "Session lifetime (minutes)",
   "Datei-Logging": "File logging",
   "Die angegebenen Aufbewahrungsfristen müssen im Webserver, in Matomo und Sentry entsprechend konfiguriert sein. Diese Angaben ändern keine externen Dienste.": "The stated retention periods must also be configured in the web server, Matomo and Sentry. These entries do not change external services.",
-  "Das Bild konnte nicht gespeichert werden. Prüfe die Schreibrechte.": "The image could not be saved. Check write permissions."
+  "Das Bild konnte nicht gespeichert werden. Prüfe die Schreibrechte.": "The image could not be saved. Check write permissions.",
+  "Die Prüfung ist auf diesem Server nicht verfügbar. Fehlende PHP-Funktion: ": "Checking is unavailable on this server. Missing PHP function: ",
+  "Der Prüfserver konnte den Zielhost nicht auflösen. Bitte prüfe die URL und die DNS-Konfiguration des Servers.": "The checking server could not resolve the target host. Check the URL and server DNS configuration.",
+  "Der Prüfserver konnte keine Verbindung zur Zielseite herstellen. Bitte prüfe ausgehende Verbindungen und die Erreichbarkeit der Zielseite.": "The checking server could not connect to the target site. Check outbound connections and target availability.",
+  "Die Zielseite hat nicht rechtzeitig geantwortet. Bitte versuche es später erneut.": "The target site did not respond in time. Please try again later.",
+  "Die HTTPS-Verbindung zur Zielseite ist fehlgeschlagen. Bitte prüfe das Zertifikat der Zielseite und den CA-Zertifikatsspeicher des Prüfservers.": "The HTTPS connection to the target site failed. Check its certificate and the checking server CA certificate store.",
+  "Der Prüfserver konnte die Zielseite nicht erreichen. Bitte prüfe die Serververbindung und die Erreichbarkeit der Zielseite.": "The checking server could not reach the target site. Check the server connection and target availability.",
+  "Die Prüfung ist wegen eines internen Serverfehlers fehlgeschlagen. Bitte kontaktiere den Betreiber.": "The check failed because of an internal server error. Please contact the operator."
 }
