@@ -14,9 +14,11 @@
 @error($key)<p class="field-error">{{ $message }}</p>@enderror
 @endforeach
 @if($section === 'branding')
-@foreach(['logo'=>'Logo', 'social_image'=>'Open-Graph-Bild', 'icon'=>'Fav-/App-Icon'] as $kind => $label)
+<p class="hint">{{ __('Ein hochgeladenes Logo ersetzt die Wortmarke samt Projektname im Header. Wenn nur eine Variante vorhanden ist, wird sie in beiden Farbmodi verwendet. Das bisherige Logo bleibt als Light-Mode-Variante erhalten, bis es ersetzt oder entfernt wird.') }}</p>
+@foreach(['logo_light'=>'Logo für Light-Mode', 'logo_dark'=>'Logo für Dark-Mode', 'social_image'=>'Open-Graph-Bild', 'icon'=>'Fav-/App-Icon'] as $kind => $label)
 <label for="{{ $kind }}">{{ __($label) }}</label><p class="hint">{{ $kind==='social_image' ? __('Wird auf 1200 × 630 Pixel zugeschnitten.') : ($kind==='icon' ? __('Quadratische Vorlage empfohlen. Favicon und App-Icons werden automatisch erzeugt.') : __('PNG mit transparentem Hintergrund empfohlen.')) }} {{ __('PNG, JPEG oder WebP; maximal 8 MB und 20 Megapixel.') }}</p>
-@if(config('branding.'.($kind==='icon' ? 'icon_192' : $kind)))<img class="asset-preview" src="{{ url(config('branding.'.($kind==='icon' ? 'icon_192' : $kind))) }}" alt="{{ __($label) }}">@endif
+@php($assetPreview = config('branding.'.($kind==='icon' ? 'icon_192' : $kind)) ?: ($kind === 'logo_light' ? config('branding.logo') : null))
+@if($assetPreview)<img class="asset-preview" src="{{ url($assetPreview) }}" alt="{{ __($label) }}">@endif
 <input id="{{ $kind }}" type="file" name="{{ $kind }}" accept="image/png,image/jpeg,image/webp"><label><input type="checkbox" name="clear_{{ $kind }}" value="1">{{ __('Eigenes Bild entfernen und Standard verwenden') }}</label>
 @endforeach
 @endif

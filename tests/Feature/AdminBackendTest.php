@@ -122,6 +122,50 @@ class AdminBackendTest extends TestCase
         $this->get(config('branding.icon_32'))->assertOk()->assertHeader('X-Content-Type-Options', 'nosniff');
     }
 
+    public function test_theme_specific_logos_replace_the_header_name_and_keep_legacy_fallbacks(): void
+    {
+        Storage::fake('public');
+        $this->admin();
+        $settings = app(InstanceSettings::class);
+        $settings->put('asset_logo', '/media/branding/legacy-logo.png');
+        $settings->apply();
+        $this->get('/admin/settings/branding')->assertOk()->assertSee('name="logo_light"', false)->assertSee('name="logo_dark"', false)->assertSee('legacy-logo.png');
+        $this->post('/admin/settings/branding', [
+            'logo_light' => UploadedFile::fake()->image('light.png', 700, 100),
+            'logo_dark' => UploadedFile::fake()->image('dark.png', 700, 100),
+        ])->assertSessionHasNoErrors();
+        $settings->apply();
+        $light = config('branding.logo_light');
+        $dark = config('branding.logo_dark');
+        $this->assertNotSame($light, $dark);
+        foreach (['/de/', '/en/impressum', '/admin/settings/branding'] as $page) {
+            $html = $this->get($page)->assertOk()->assertSee($light, false)->assertSee($dark, false)->getContent();
+            preg_match('/<a class="brand"[^>]*>(.*?)<\/a>/s', $html, $brand);
+            $content = preg_replace('/<style>.*?<\/style>/s', '', $brand[1]);
+            $this->assertSame('', trim(strip_tags($content)), 'Custom logo must replace visible project text.');
+        }
+        $this->post('/admin/settings/branding', ['clear_logo_dark' => 1])->assertSessionHasNoErrors();
+        $settings->apply();
+        $this->assertNull(config('branding.logo_dark'));
+        $this->get('/de/')->assertSee($light, false)->assertDontSee($dark, false);
+        $this->post('/admin/settings/branding', ['clear_logo_light' => 1])->assertSessionHasNoErrors();
+        $settings->apply();
+        $this->assertNull(config('branding.logo'));
+        $this->get('/de/')->assertSee('<span class="logo">og</span>'.config('app.name'), false);
+    }
+
+    public function test_dark_only_logo_is_used_in_both_themes_and_invalid_uploads_are_rejected(): void
+    {
+        Storage::fake('public');
+        $this->admin();
+        $this->post('/admin/settings/branding', ['logo_dark' => UploadedFile::fake()->createWithContent('bad.svg', '<svg></svg>')])->assertSessionHasErrors('logo_dark');
+        $this->post('/admin/settings/branding', ['logo_dark' => UploadedFile::fake()->image('dark.png', 500, 100)])->assertSessionHasNoErrors();
+        app(InstanceSettings::class)->apply();
+        $html = $this->get('/de/')->assertOk()->getContent();
+        $this->assertStringContainsString('class="brand-logo-light" src="'.url(config('branding.logo_dark')).'"', $html);
+        $this->assertStringContainsString('class="brand-logo-dark" src="'.url(config('branding.logo_dark')).'"', $html);
+    }
+
     public function test_svg_and_malformed_images_are_rejected(): void
     {
         Storage::fake('public');
