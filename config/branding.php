@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'social_image' => null,
+    'social_image_de' => null,
+    'social_image_en' => null,
     'logo' => null,
     'logo_light' => null,
     'logo_dark' => null,

@@ -23,14 +23,14 @@ class BrandingAssets
         $id = Str::uuid()->toString();
         $result = [];
         $logoScale = min(800 / $dimensions[0], 320 / $dimensions[1], 1);
-        $sizes = $kind === 'icon' ? ['icon_32' => [32, 32], 'icon_180' => [180, 180], 'icon_192' => [192, 192], 'icon_512' => [512, 512]] : [$kind => $kind === 'social_image' ? [1200, 630] : [max(1, (int) round($dimensions[0] * $logoScale)), max(1, (int) round($dimensions[1] * $logoScale))]];
+        $sizes = $kind === 'icon' ? ['icon_32' => [32, 32], 'icon_180' => [180, 180], 'icon_192' => [192, 192], 'icon_512' => [512, 512]] : [$kind => in_array($kind, ['social_image', 'social_image_de', 'social_image_en'], true) ? [1200, 630] : [max(1, (int) round($dimensions[0] * $logoScale)), max(1, (int) round($dimensions[1] * $logoScale))]];
         try {
             foreach ($sizes as $key => [$width, $height]) {
                 $target = imagecreatetruecolor($width, $height);
                 imagealphablending($target, false);
                 imagesavealpha($target, true);
                 imagefill($target, 0, 0, imagecolorallocatealpha($target, 0, 0, 0, 127));
-                $scale = $kind === 'social_image' ? max($width / $dimensions[0], $height / $dimensions[1]) : min($width / $dimensions[0], $height / $dimensions[1]);
+                $scale = in_array($kind, ['social_image', 'social_image_de', 'social_image_en'], true) ? max($width / $dimensions[0], $height / $dimensions[1]) : min($width / $dimensions[0], $height / $dimensions[1]);
                 $scaledWidth = (int) round($dimensions[0] * $scale);
                 $scaledHeight = (int) round($dimensions[1] * $scale);
                 imagecopyresampled($target, $source, (int) (($width - $scaledWidth) / 2), (int) (($height - $scaledHeight) / 2), 0, 0, $scaledWidth, $scaledHeight, $dimensions[0], $dimensions[1]);

@@ -443,5 +443,9 @@
   "Die Prüfung ist wegen eines internen Serverfehlers fehlgeschlagen. Bitte kontaktiere den Betreiber.": "The check failed because of an internal server error. Please contact the operator.",
   "Logo für Light-Mode": "Light-mode logo",
   "Logo für Dark-Mode": "Dark-mode logo",
-  "Ein hochgeladenes Logo ersetzt die Wortmarke samt Projektname im Header. Wenn nur eine Variante vorhanden ist, wird sie in beiden Farbmodi verwendet. Das bisherige Logo bleibt als Light-Mode-Variante erhalten, bis es ersetzt oder entfernt wird.": "An uploaded logo replaces the default mark and project name in the header. If only one variant exists, it is used in both themes. Your existing logo remains the light-mode fallback until replaced or removed."
+  "Ein hochgeladenes Logo ersetzt die Wortmarke samt Projektname im Header. Wenn nur eine Variante vorhanden ist, wird sie in beiden Farbmodi verwendet. Das bisherige Logo bleibt als Light-Mode-Variante erhalten, bis es ersetzt oder entfernt wird.": "An uploaded logo replaces the default mark and project name in the header. If only one variant exists, it is used in both themes. Your existing logo remains the light-mode fallback until replaced or removed.",
+  "Open-Graph-Bild Deutsch": "Open Graph image: German",
+  "Open-Graph-Bild Englisch": "Open Graph image: English",
+  "Bisheriges gemeinsames Open-Graph-Bild entfernen": "Remove the previous shared Open Graph image",
+  "Open-Graph-Bilder werden passend zur Seitensprache verwendet. Solange eine Sprachversion fehlt, wird das bisherige gemeinsame Bild oder das Standardbild der Sprache verwendet.": "Open Graph images match the page language. Missing language variants use the previous shared image or the default image for that language."
 }
