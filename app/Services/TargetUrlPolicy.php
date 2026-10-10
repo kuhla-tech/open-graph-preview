@@ -27,7 +27,7 @@ class TargetUrlPolicy
         }
         $address = str_contains($addresses[0], ':') ? '['.$addresses[0].']' : $addresses[0];
 
-        return ['verify' => true, 'curl' => [CURLOPT_RESOLVE => [$host.':'.$port.':'.$address], CURLOPT_PROXY => '', CURLOPT_NOPROXY => '*']];
+        return ['verify' => true, 'proxy' => '', 'curl' => [CURLOPT_RESOLVE => [$host.':'.$port.':'.$address]]];
     }
 
     public function publicIp(string $ip): bool
